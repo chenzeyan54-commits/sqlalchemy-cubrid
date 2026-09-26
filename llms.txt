@@ -2,15 +2,15 @@
 
 > SQLAlchemy 2.0 dialect for the CUBRID relational database. Provides SQL compilation, type mapping, schema reflection, DDL/DML extensions, Alembic migration support, and PEP 561 typing for Python 3.10+.
 
-sqlalchemy-cubrid enables Python developers to use CUBRID with SQLAlchemy's full feature set — Core, ORM, and Alembic migrations. It supports two driver backends: the C-extension `CUBRIDdb` driver and the pure Python `pycubrid` driver.
+sqlalchemy-cubrid enables Python developers to use CUBRID with SQLAlchemy's full feature set — Core, ORM, and Alembic migrations. It supports three driver backends: the C-extension `CUBRIDdb` driver, the pure Python `pycubrid` driver, and the async driver `cubrid+aiohttp` / async pycubrid.
 
 Key facts:
-- Connection URL: `cubrid://user:password@host:33000/dbname` (C-extension) or `cubrid+pycubrid://user:password@host:33000/dbname` (pure Python)
+- Connection URL: `cubrid://user:password@host:33000/dbname` (C-extension), `cubrid+pycubrid://user:password@host:33000/dbname` (pure Python), or async variants
 - CUBRID uses `AUTO_INCREMENT` instead of sequences, `SMALLINT` for booleans, and collection types (`SET`, `MULTISET`, `SEQUENCE`) instead of arrays
-- CUBRID does not support `RETURNING`, JSON, or multi-schema — this dialect handles all differences transparently
+- CUBRID natively supports JSON (in CUBRID 10.2+), but does not support `RETURNING` or multi-schema — this dialect handles all differences transparently
 - DDL is auto-committed (`transactional_ddl = False`)
 - Identifier folding is lowercase (not uppercase like SQL standard)
-- 6 isolation levels with dual-granularity (class-level + instance-level)
+- Supports 3 MVCC isolation levels (TRANSACTIONS_COMMITTED, TRANSACTIONS_REPEATABLE_READ, TRANSACTIONS_SERIALIZABLE) alongside legacy dual-granularity levels
 - Install: `pip install sqlalchemy-cubrid` or `pip install "sqlalchemy-cubrid[pycubrid]"` for the pure Python driver
 
 ## Docs
@@ -18,7 +18,7 @@ Key facts:
 - [Connection Guide](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/docs/CONNECTION.md): Connection strings, URL format, driver setup, connection pool tuning
 - [Type Mapping](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/docs/TYPES.md): Full type mapping between Python/SQLAlchemy and CUBRID types, including collection types
 - [DML Extensions](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/docs/DML_EXTENSIONS.md): ON DUPLICATE KEY UPDATE, MERGE, REPLACE INTO, GROUP_CONCAT, TRUNCATE
-- [Isolation Levels](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/docs/ISOLATION_LEVELS.md): All 6 CUBRID isolation levels and how to configure them
+- [Isolation Levels](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/docs/ISOLATION_LEVELS.md): CUBRID isolation levels and how to configure them
 - [Alembic Migrations](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/docs/ALEMBIC.md): Setup, configuration, limitations, batch workarounds
 - [Feature Support](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/docs/FEATURE_SUPPORT.md): Feature comparison with MySQL, PostgreSQL, SQLite
 - [ORM Cookbook](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/docs/ORM_COOKBOOK.md): Practical ORM usage examples with CUBRID
@@ -30,8 +30,8 @@ Key facts:
 
 - [Quick Start — Core](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/README.md#quick-start): Basic connection-level usage with `create_engine` and `text()`
 - [Quick Start — ORM](https://github.com/cubrid-lab/sqlalchemy-cubrid/blob/main/README.md#orm-session-level): Declarative ORM model definition and CRUD operations
-- [CUBRID Cookbook — SQLAlchemy](https://github.com/cubrid-lab/cubrid-cookbook/tree/main/python/sqlalchemy): Production-ready SQLAlchemy examples with CUBRID
-- [CUBRID Cookbook — FastAPI](https://github.com/cubrid-lab/cubrid-cookbook/tree/main/python/fastapi): FastAPI REST API using sqlalchemy-cubrid
+- [CUBRID Cookbook — SQLAlchemy](https://github.com/cubrid-lab/cubrid-cookbook/tree/main/sqlalchemy): Production-ready SQLAlchemy examples with CUBRID
+- [CUBRID Cookbook — FastAPI](https://github.com/cubrid-lab/cubrid-cookbook/tree/main/fastapi): FastAPI REST API using sqlalchemy-cubrid
 
 ## API Reference
 
